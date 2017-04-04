@@ -15,6 +15,7 @@
  **/
 package io.confluent.kafkarest.resources;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
@@ -136,6 +137,19 @@ public class PartitionsResource {
                             final @PathParam("topic") String topic,
                             final @PathParam("partition") int partition,
                             @Valid PartitionProduceRequest<BinaryProduceRecord> request) {
+    produce(asyncResponse, topic, partition, EmbeddedFormat.BINARY, request);
+  }
+
+  @POST
+  @Path("/{partition}")
+  @PerformanceMetric("partition.produce-binary-raw")
+  @Consumes({Versions.KAFKA_V1_BINARY})
+  public void produceBinary(final @Suspended AsyncResponse asyncResponse,
+                            final @PathParam("topic") String topic,
+                            final @PathParam("partition") int partition,
+                            byte[] value) {
+    PartitionProduceRequest<BinaryProduceRecord> request = new PartitionProduceRequest();
+    request.setRecords(Arrays.asList(new BinaryProduceRecord(value)));
     produce(asyncResponse, topic, partition, EmbeddedFormat.BINARY, request);
   }
 

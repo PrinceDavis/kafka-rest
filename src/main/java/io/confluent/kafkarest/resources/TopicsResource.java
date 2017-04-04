@@ -15,6 +15,7 @@
  **/
 package io.confluent.kafkarest.resources;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
@@ -82,6 +83,18 @@ public class TopicsResource {
   public void produceBinary(final @Suspended AsyncResponse asyncResponse,
                             @PathParam("topic") String topicName,
                             @Valid TopicProduceRequest<BinaryTopicProduceRecord> request) {
+    produce(asyncResponse, topicName, EmbeddedFormat.BINARY, request);
+  }
+
+  @POST
+  @Path("/{topic}")
+  @PerformanceMetric("topic.produce-binary-raw")
+  @Consumes({Versions.KAFKA_V1_BINARY})
+  public void produceBinary(final @Suspended AsyncResponse asyncResponse,
+                            @PathParam("topic") String topicName,
+                            byte[] value) {
+    TopicProduceRequest<BinaryTopicProduceRecord> request = new TopicProduceRequest();
+    request.setRecords(Arrays.asList(new BinaryTopicProduceRecord(value)));
     produce(asyncResponse, topicName, EmbeddedFormat.BINARY, request);
   }
 

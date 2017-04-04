@@ -61,4 +61,6 @@ public class Versions {
   // this as JSON since that's all we currently support.
   public static final String GENERIC_REQUEST = "application/octet-stream";
 
+  public static final String KAFKA_V1_BINARY = "application/vnd.kafka.binary.v1";
+
 }
